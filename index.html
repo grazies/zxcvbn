@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Zxcvbn by grazies</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Zxcvbn</h1>
+      <h2 class="project-tagline">A realistic password strength estimator.</h2>
+      <a href="https://github.com/grazies/zxcvbn" class="btn">View on GitHub</a>
+      <a href="https://github.com/grazies/zxcvbn/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/grazies/zxcvbn/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <pre><code>_________________________________________________/\/\___________________
+_/\/\/\/\/\__/\/\__/\/\____/\/\/\/\__/\/\__/\/\__/\/\________/\/\/\/\___
+_____/\/\______/\/\/\____/\/\________/\/\__/\/\__/\/\/\/\____/\/\__/\/\_
+___/\/\________/\/\/\____/\/\__________/\/\/\____/\/\__/\/\__/\/\__/\/\_
+_/\/\/\/\/\__/\/\__/\/\____/\/\/\/\______/\______/\/\/\/\____/\/\__/\/\_
+________________________________________________________________________
+</code></pre>
+
+<p><a href="https://travis-ci.org/dropbox/zxcvbn"><img src="https://travis-ci.org/dropbox/zxcvbn.svg?branch=master" alt="Build Status"></a>
+<a href="https://saucelabs.com/u/dropbox-zxcvbn"><img src="https://saucelabs.com/browser-matrix/dropbox-zxcvbn.svg" alt="Sauce Test Status"></a></p>
+
+<p><code>zxcvbn</code> is a password strength estimator inspired by password crackers. Through pattern matching and conservative estimation, it recognizes and weighs 30k common passwords, common names and surnames according to US census data, popular English words from Wikipedia and US television and movies, and other common patterns like dates, repeats (<code>aaa</code>), sequences (<code>abcd</code>), keyboard patterns (<code>qwertyuiop</code>), and l33t speak.</p>
+
+<p>Consider using zxcvbn as an algorithmic alternative to password composition policy — it is more secure, flexible, and usable when sites require a minimal complexity score in place of annoying rules like "passwords must contain three of {lower, upper, numbers, symbols}".</p>
+
+<ul>
+<li>
+<strong>More secure</strong>: policies often fail both ways, allowing weak passwords (<code>P@ssword1</code>) and disallowing strong passwords.</li>
+<li>
+<strong>More flexible</strong>: zxcvbn allows many password styles to flourish so long as it detects sufficient complexity — passphrases are rated highly given enough uncommon words, keyboard patterns are ranked based on length and number of turns, and capitalization adds more complexity when it's unpredictaBle.</li>
+<li>
+<strong>More usable</strong>: zxcvbn is designed to power simple, rule-free interfaces that give instant feedback. In addition to strength estimation, zxcvbn includes minimal, targeted verbal feedback that can help guide users towards less guessable passwords.</li>
+</ul>
+
+<p>At Dropbox we use zxcvbn (<a href="https://github.com/dropbox/zxcvbn/releases">Release notes</a>) on our web, desktop, iOS and Android clients. If Javascript doesn't work for you, others have graciously ported the library to these languages:</p>
+
+<ul>
+<li>
+<a href="https://github.com/nulab/zxcvbn4j"><code>zxcvbn4j</code></a> (Java)</li>
+<li>
+<a href="https://github.com/dropbox/zxcvbn-ios"><code>zxcvbn-ios</code></a> (Objective-C)</li>
+<li>
+<a href="https://github.com/dropbox/python-zxcvbn"><code>python-zxcvbn</code></a> (Python)</li>
+<li>
+<a href="https://github.com/nbutton23/zxcvbn-go"><code>zxcvbn-go</code></a> (Go)</li>
+<li>
+<a href="https://github.com/envato/zxcvbn-ruby"><code>zxcvbn-ruby</code></a> (Ruby)</li>
+<li>
+<a href="https://github.com/bjeavons/zxcvbn-php"><code>zxcvbn-php</code></a> (PHP)</li>
+<li>
+<a href="https://github.com/mickford/zxcvbn-cs"><code>zxcvbn-cs</code></a> (C#/.NET)</li>
+<li>
+<a href="https://github.com/tekul/szxcvbn"><code>szxcvbn</code></a> (Scala)</li>
+</ul>
+
+<p>For more motivation, see:</p>
+
+<p><a href="http://tech.dropbox.com/?p=165">http://tech.dropbox.com/?p=165</a></p>
+
+<h1>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h1>
+
+<p>zxcvbn detects and supports CommonJS (node, browserify) and AMD (RequireJS). In the absence of those, it adds a single function <code>zxcvbn()</code> to the global namespace.</p>
+
+<h2>
+<a id="bower" class="anchor" href="#bower" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Bower</h2>
+
+<p>Install <a href="https://nodejs.org/download/"><code>node</code></a> and <a href="http://bower.io/"><code>bower</code></a> if you haven't already.</p>
+
+<p>Get <code>zxcvbn</code>:</p>
+
+<div class="highlight highlight-source-shell"><pre><span class="pl-c1">cd</span> /path/to/project/root
+bower install zxcvbn</pre></div>
+
+<p>Add this script to your <code>index.html</code>:</p>
+
+<div class="highlight highlight-text-html-basic"><pre><span class="pl-s1">&lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text/javascript<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>bower_components/zxcvbn/dist/zxcvbn.js<span class="pl-pds">"</span></span>&gt;</span>
+<span class="pl-s1">&lt;/<span class="pl-ent">script</span>&gt;</span></pre></div>
+
+<p>To make sure it loaded properly, open in a browser and type <code>zxcvbn('Tr0ub4dour&amp;3')</code> into the console.</p>
+
+<p>To pull in updates and bug fixes:</p>
+
+<div class="highlight highlight-source-shell"><pre>bower update zxcvbn</pre></div>
+
+<h2>
+<a id="node--npm--meteorjs" class="anchor" href="#node--npm--meteorjs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Node / npm / MeteorJS</h2>
+
+<p>zxcvbn works identically on the server.</p>
+
+<div class="highlight highlight-source-shell"><pre>$ npm install zxcvbn
+$ node
+<span class="pl-k">&gt;</span> var zxcvbn = require(<span class="pl-s"><span class="pl-pds">'</span>zxcvbn<span class="pl-pds">'</span></span>)<span class="pl-k">;</span>
+<span class="pl-k">&gt;</span> zxcvbn(<span class="pl-s"><span class="pl-pds">'</span>Tr0ub4dour&amp;3<span class="pl-pds">'</span></span>)<span class="pl-k">;</span></pre></div>
+
+<h2>
+<a id="requirejs" class="anchor" href="#requirejs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>RequireJS</h2>
+
+<p>Add <a href="https://raw.githubusercontent.com/dropbox/zxcvbn/master/dist/zxcvbn.js"><code>zxcvbn.js</code></a> to your project (using bower, npm or direct download) and import as usual:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-en">requirejs</span>([<span class="pl-s"><span class="pl-pds">"</span>relpath/to/zxcvbn<span class="pl-pds">"</span></span>], <span class="pl-k">function</span> (<span class="pl-smi">zxcvbn</span>) {
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-en">zxcvbn</span>(<span class="pl-s"><span class="pl-pds">'</span>Tr0ub4dour&amp;3<span class="pl-pds">'</span></span>));
+});</pre></div>
+
+<h2>
+<a id="browserify--webpack" class="anchor" href="#browserify--webpack" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Browserify / Webpack</h2>
+
+<p>If you're using <code>npm</code> and have <code>require('zxcvbn')</code> somewhere in your code, browserify and webpack should just work.</p>
+
+<div class="highlight highlight-source-shell"><pre>$ npm install zxcvbn
+$ <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>console.log(require('zxcvbn'))<span class="pl-pds">"</span></span> <span class="pl-k">&gt;</span> mymodule.js
+$ browserify mymodule.js <span class="pl-k">&gt;</span> browserify_bundle.js
+$ webpack mymodule.js webpack_bundle.js</pre></div>
+
+<p>But we recommend against bundling zxcvbn via tools like browserify and webpack, for three reasons:</p>
+
+<ul>
+<li>Minified and gzipped, zxcvbn is still several hundred kilobytes. (Significantly grows bundle size.)</li>
+<li>Most sites will only need zxcvbn on a few pages (registration, password reset).</li>
+<li>Most sites won't need <code>zxcvbn()</code> immediately upon page load; since <code>zxcvbn()</code> is typically called in response to user events like filling in a password, there's ample time to fetch <code>zxcvbn.js</code> after initial html/css/js loads and renders.</li>
+</ul>
+
+<p>See the <a href="#perf">performance</a> section below for tips on loading zxcvbn stand-alone.</p>
+
+<p>Tangentially, if you want to build your own standalone, consider tweaking the browserify pipeline used to generate <code>dist/zxcvbn.js</code>:</p>
+
+<div class="highlight highlight-source-shell"><pre>$ browserify --debug --standalone zxcvbn \
+    -t coffeeify --extension=<span class="pl-s"><span class="pl-pds">'</span>.coffee<span class="pl-pds">'</span></span> \
+    -t uglifyify \
+    src/main.coffee <span class="pl-k">|</span> exorcist dist/zxcvbn.js.map <span class="pl-k">&gt;</span><span class="pl-k">|</span> dist/zxcvbn.js</pre></div>
+
+<ul>
+<li>
+<code>--debug</code> adds an inline source map to the bundle. <code>exorcist</code> pulls it out into <code>dist/zxcvbn.js.map</code>.</li>
+<li>
+<code>--standalone zxcvbn</code> exports a global <code>zxcvbn</code> when CommonJS/AMD isn't detected.</li>
+<li>
+<code>-t coffeeify --extension='.coffee'</code> compiles <code>.coffee</code> to <code>.js</code> before bundling. This is convenient as it allows <code>.js</code> modules to import from <code>.coffee</code> modules and vice-versa. Instead of this transform, one could also compile everything to <code>.js</code> first (<code>npm run prepublish</code>) and point <code>browserify</code> to <code>lib</code> instead of <code>src</code>.</li>
+<li>
+<code>-t uglifyify</code> minifies the bundle through UglifyJS, maintaining proper source mapping.</li>
+</ul>
+
+<h2>
+<a id="manual-installation" class="anchor" href="#manual-installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Manual installation</h2>
+
+<p>Download <a href="https://raw.githubusercontent.com/dropbox/zxcvbn/master/dist/zxcvbn.js">zxcvbn.js</a>.</p>
+
+<p>Add to your .html:</p>
+
+<div class="highlight highlight-text-html-basic"><pre><span class="pl-s1">&lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text/javascript<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>path/to/zxcvbn.js<span class="pl-pds">"</span></span>&gt;</span>
+<span class="pl-s1">&lt;/<span class="pl-ent">script</span>&gt;</span></pre></div>
+
+<h1>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h1>
+
+<p><a href="https://dl.dropboxusercontent.com/u/209/zxcvbn/test/index.html">try zxcvbn interactively</a> to see these docs in action.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-en">zxcvbn</span>(password, user_inputs<span class="pl-k">=</span>[])</pre></div>
+
+<p><code>zxcvbn()</code> takes one required argument, a password, and returns a result object with several properties:</p>
+
+<div class="highlight highlight-source-coffee"><pre>result.guesses            <span class="pl-c"># estimated guesses needed to crack password</span>
+result.guesses_log10      <span class="pl-c"># order of magnitude of result.guesses</span>
+
+result.crack_times_seconds <span class="pl-c"># dictionary of back-of-the-envelope crack time</span>
+                          <span class="pl-c"># estimations, in seconds, based on a few scenarios:</span>
+{
+  <span class="pl-c"># online attack on a service that ratelimits password auth attempts.</span>
+  online_throttling_100_per_hour
+
+  <span class="pl-c"># online attack on a service that doesn't ratelimit,</span>
+  <span class="pl-c"># or where an attacker has outsmarted ratelimiting.</span>
+  online_no_throttling_10_per_second
+
+  <span class="pl-c"># offline attack. assumes multiple attackers,</span>
+  <span class="pl-c"># proper user-unique salting, and a slow hash function</span>
+  <span class="pl-c"># w/ moderate work factor, such as bcrypt, scrypt, PBKDF2.</span>
+  offline_slow_hashing_1e4_per_second
+
+  <span class="pl-c"># offline attack with user-unique salting but a fast hash</span>
+  <span class="pl-c"># function like SHA-1, SHA-256 or MD5. A wide range of</span>
+  <span class="pl-c"># reasonable numbers anywhere from one billion - one trillion</span>
+  <span class="pl-c"># guesses per second, depending on number of cores and machines.</span>
+  <span class="pl-c"># ballparking at 10B/sec.</span>
+  offline_fast_hashing_1e10_per_second
+}
+
+result.crack_times_display <span class="pl-c"># same keys as result.crack_times_seconds,</span>
+                           <span class="pl-c"># with friendlier display string values:</span>
+                           <span class="pl-c"># "less than a second", "3 hours", "centuries", etc.</span>
+
+result.score      <span class="pl-c"># Integer from 0-4 (useful for implementing a strength bar)</span>
+
+  <span class="pl-c1">0</span> <span class="pl-c"># too guessable: risky password. (guesses &lt; 10^3)</span>
+
+  <span class="pl-c1">1</span> <span class="pl-c"># very guessable: protection from throttled online attacks. (guesses &lt; 10^6)</span>
+
+  <span class="pl-c1">2</span> <span class="pl-c"># somewhat guessable: protection from unthrottled online attacks. (guesses &lt; 10^8)</span>
+
+  <span class="pl-c1">3</span> <span class="pl-c"># safely unguessable: moderate protection from offline slow-hash scenario. (guesses &lt; 10^10)</span>
+
+  <span class="pl-c1">4</span> <span class="pl-c"># very unguessable: strong protection from offline slow-hash scenario. (guesses &gt;= 10^10)</span>
+
+result.feedback   <span class="pl-c"># verbal feedback to help choose better passwords. set when score &lt;= 2.</span>
+
+  result.feedback.warning     <span class="pl-c"># explains what's wrong, eg. 'this is a top-10 common password'.</span>
+                              <span class="pl-c"># not always set -- sometimes an empty string</span>
+
+  result.feedback.suggestions <span class="pl-c"># a possibly-empty list of suggestions to help choose a less</span>
+                              <span class="pl-c"># guessable password. eg. 'Add another word or two'</span>
+
+result.sequence   <span class="pl-c"># the list of patterns that zxcvbn based the</span>
+                  <span class="pl-c"># guess calculation on.</span>
+
+result.calc_time  <span class="pl-c"># how long it took zxcvbn to calculate an answer,</span>
+                  <span class="pl-c"># in milliseconds.</span></pre></div>
+
+<p>The optional <code>user_inputs</code> argument is an array of strings that zxcvbn will treat as an extra dictionary. This can be whatever list of strings you like, but is meant for user inputs from other fields of the form, like name and email. That way a password that includes a user's personal information can be heavily penalized. This list is also good for site-specific vocabulary — Acme Brick Co. might want to include ['acme', 'brick', 'acmebrick', etc].</p>
+
+<h1>
+<a id="performance" class="anchor" href="#performance" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a name="perf"></a>Performance</h1>
+
+<h2>
+<a id="runtime-latency" class="anchor" href="#runtime-latency" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>runtime latency</h2>
+
+<p>zxcvbn operates below human perception of delay for most input: ~5-20ms for ~25 char passwords on modern browsers/CPUs, ~100ms for passwords around 100 characters. To bound runtime latency for really long passwords, consider sending <code>zxcvbn()</code> only the first 100 characters or so of user input.</p>
+
+<h2>
+<a id="script-load-latency" class="anchor" href="#script-load-latency" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>script load latency</h2>
+
+<p><code>zxcvbn.js</code> bundled and minified is about 390kb gzipped or 800kb uncompressed, most of which is dictionaries. Consider these tips if you're noticing page load latency on your site.</p>
+
+<ul>
+<li>Make sure your server is configured to compress static assets for browsers that support it. (<a href="https://rtcamp.com/tutorials/nginx/enable-gzip/">nginx tutorial</a>, <a href="http://betterexplained.com/articles/how-to-optimize-your-site-with-gzip-compression/">apache/IIS tutorial</a>.)</li>
+</ul>
+
+<p>Then try one of these alternatives:</p>
+
+<ol>
+<li><p>Put your <code>&lt;script src="zxcvbn.js"&gt;</code> tag at the end of your html, just before the closing <code>&lt;/body&gt;</code> tag. This insures your page loads and renders before the browser fetches and loads <code>zxcvbn.js</code>. The downside with this approach is <code>zxcvbn()</code> becomes available later than had it been included in <code>&lt;head&gt;</code> — not an issue on most signup pages where users are filling out other fields first.</p></li>
+<li><p>If you're using requirejs, try loading <code>zxcvbn.js</code> separately from your main bundle. Something to watch out for: if <code>zxcvbn.js</code> is required inside a keyboard handler waiting for user input, the entire script might be loaded only after the user presses their first key, creating nasty latency. Avoid this by calling your handler once upon page load, independent of user input, such that the <code>requirejs()</code> call runs earlier.</p></li>
+<li><p>Use the HTML5 <a href="http://www.w3schools.com/tags/att_script_async.asp"><code>async</code></a> script attribute. Downside: <a href="http://caniuse.com/#feat=script-async">doesn't work</a> in IE7-9 or Opera Mini.</p></li>
+<li><p>Include an inline <code>&lt;script&gt;</code> in <code>&lt;head&gt;</code> that asynchronously loads <code>zxcvbn.js</code> in the background. Advantage over (3): it works in older browsers.</p></li>
+</ol>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// cross-browser asynchronous script loading for zxcvbn.</span>
+<span class="pl-c">// adapted from http://friendlybit.com/js/lazy-loading-asyncronous-javascript/</span>
+
+(<span class="pl-k">function</span>() {
+
+  <span class="pl-k">var</span> <span class="pl-c1">ZXCVBN_SRC</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>path/to/zxcvbn.js<span class="pl-pds">'</span></span>;
+
+  <span class="pl-k">var</span> <span class="pl-en">async_load</span> <span class="pl-k">=</span> <span class="pl-k">function</span>() {
+    <span class="pl-k">var</span> first, s;
+    s <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>);
+    <span class="pl-smi">s</span>.<span class="pl-smi">src</span> <span class="pl-k">=</span> <span class="pl-c1">ZXCVBN_SRC</span>;
+    <span class="pl-smi">s</span>.<span class="pl-c1">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>text/javascript<span class="pl-pds">'</span></span>;
+    <span class="pl-smi">s</span>.<span class="pl-smi">async</span> <span class="pl-k">=</span> <span class="pl-c1">true</span>;
+    first <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementsByTagName</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>];
+    <span class="pl-k">return</span> <span class="pl-smi">first</span>.<span class="pl-c1">parentNode</span>.<span class="pl-c1">insertBefore</span>(s, first);
+  };
+
+  <span class="pl-k">if</span> (<span class="pl-c1">window</span>.<span class="pl-smi">attachEvent</span> <span class="pl-k">!=</span> <span class="pl-c1">null</span>) {
+    <span class="pl-c1">window</span>.<span class="pl-c1">attachEvent</span>(<span class="pl-s"><span class="pl-pds">'</span>onload<span class="pl-pds">'</span></span>, async_load);
+  } <span class="pl-k">else</span> {
+    <span class="pl-c1">window</span>.<span class="pl-c1">addEventListener</span>(<span class="pl-s"><span class="pl-pds">'</span>load<span class="pl-pds">'</span></span>, async_load, <span class="pl-c1">false</span>);
+  }
+
+}).<span class="pl-c1">call</span>(<span class="pl-v">this</span>);</pre></div>
+
+<h1>
+<a id="development" class="anchor" href="#development" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Development</h1>
+
+<p>Bug reports and pull requests welcome!</p>
+
+<div class="highlight highlight-source-shell"><pre>git clone https://github.com/dropbox/zxcvbn.git</pre></div>
+
+<p>zxcvbn is built with CoffeeScript, browserify, and uglify-js. CoffeeScript source lives in <code>src</code>, which gets compiled, bundled and minified into <code>dist/zxcvbn.js</code>.</p>
+
+<div class="highlight highlight-source-shell"><pre>npm run build    <span class="pl-c"># builds dist/zxcvbn.js</span>
+npm run watch    <span class="pl-c"># same, but quickly rebuilds as changes are made in src.</span></pre></div>
+
+<p>For debugging, both <code>build</code> and <code>watch</code> output an external source map <code>dist/zxcvbn.js.map</code> that points back to the original CoffeeScript code.</p>
+
+<p>Two source files, <code>adjacency_graphs.coffee</code> and <code>frequency_lists.coffee</code>, are generated by python scripts in <code>data-scripts</code> that read raw data from the <code>data</code> directory.</p>
+
+<p>For node developers, in addition to <code>dist</code>, the zxcvbn <code>npm</code> module includes a <code>lib</code> directory (hidden from git) that includes one compiled <code>.js</code> and <code>.js.map</code> file for every <code>.coffee</code> in <code>src</code>. See <code>prepublish</code> in <code>package.json</code> to learn more.</p>
+
+<h1>
+<a id="acknowledgments" class="anchor" href="#acknowledgments" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Acknowledgments</h1>
+
+<p><a href="https://dropbox.com">Dropbox</a> for supporting open source!</p>
+
+<p>Leah Culver and Ryan Pearl for porting zxcvbn to <a href="https://github.com/dropbox/zxcvbn-ios">Objective C</a> and <a href="https://github.com/dropbox/python-zxcvbn">python</a>.</p>
+
+<p>Mark Burnett for releasing his 10M password corpus and for his 2005 book, <a href="http://www.amazon.com/Perfect-Passwords-Selection-Protection-Authentication/dp/1597490415">Perfect Passwords: Selection, Protection, Authentication</a>.</p>
+
+<p>Wiktionary contributors for building a <a href="http://en.wiktionary.org/wiki/Wiktionary:Frequency_lists">frequency list of English</a> as used in television and movies.</p>
+
+<p>Researchers at Concordia University for <a href="http://www.concordia.ca/cunews/main/stories/2015/03/25/does-your-password-pass-muster.html">studying password estimation rigorously</a> and recommending zxcvbn.</p>
+
+<p>And <a href="https://xkcd.com/936/">xkcd</a> for the inspiration <g-emoji alias="+1" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44d.png" ios-version="6.0">👍</g-emoji><g-emoji alias="horse" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f434.png" ios-version="6.0">🐴</g-emoji><g-emoji alias="battery" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f50b.png" ios-version="6.0">🔋</g-emoji><g-emoji alias="heart" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/2764.png" ios-version="6.0">❤️</g-emoji></p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/grazies/zxcvbn">Zxcvbn</a> is maintained by <a href="https://github.com/grazies">grazies</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
